@@ -44,4 +44,11 @@ const itemStyle = {
     backgroundColor: '#f4f4f4'
 }
 
+TodoItem.PropTypes = {
+    todos: PropTypes.object.isRequired,
+    markComplete: PropTypes.func.isRequired,
+    delTodo: PropTypes.func.isRequired
+
+}
+
 export default TodoItem

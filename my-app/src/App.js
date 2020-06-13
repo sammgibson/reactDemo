@@ -1,30 +1,21 @@
 import React, { Component } from 'react';
-import {v4 as uuid} from 'uuid';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
+
+// import {v4 as uuid} from 'uuid';
 import Header from './components/layout/header';
 import Todos from'./components/Todos';
 import AddTodo from './components/AddTodo';
-
-
+import About from './components/pages/About'
+import axios from 'axios';
 
 class App extends Component {
   state ={
-    todos: [
-      {
-        id: uuid(),
-        title: 'Drive to SF',
-        completed: false
-      },
-      {
-        id: uuid(),
-        title: 'Dinner with Nico',
-        completed: false
-      },
-      {
-        id: uuid(),
-        title: 'Eat Ice Cream',
-        completed: false
-      }
-    ]
+    todos: []
+  }
+
+  componentDidMount(){
+    axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10')
+      .then(res => this.setState({todos: res.data}))
   }
   // Toggle Complete
   markComplete = (id) => {
@@ -38,30 +29,37 @@ class App extends Component {
 
   //Delete Todo
   delTodo = (id) => {
-    this.setState({ todos: [...this.state.todos.filter(todo => todo.id !== id)] })
+    axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+      .then(res => this.setState({todos: [...this.state.todos.filter(todo => todo.id !== id)]  }));
   }
 
   //add Todo
   AddTodo = (title) =>{
-    const newTodo = {
-      id:uuid(),
+    axios.post('https://jsonplaceholder.typicode.com/todos', {
       title,
       completed: false
-    }
-    this.setState({ todos: [...this.state.todos, newTodo] });
+    })
+      .then(res => this.setState({ todos: [...this.state.todos, res.data]}));
   }
 
   render() {
     console.log()
     return (
-      <div className="App">
-        <div className="container">
-          <Header />
-          <AddTodo addTodo={this.AddTodo}/>
-          <Todos todos={this.state.todos} markComplete={this.markComplete} 
-          delTodo={this.delTodo}/>
+      <Router>
+        <div className="App">
+          <div className="container">
+            <Header />
+            <Route exact path="/" render={props => (
+              <React.Fragment>
+                <AddTodo addTodo={this.AddTodo}/>
+                <Todos todos={this.state.todos} markComplete={this.markComplete} 
+                delTodo={this.delTodo}/>    
+              </React.Fragment>
+            )}/>
+            <Route path="/about" component={About}/>
+          </div>
         </div>
-      </div>
+      </Router>
     );
   }
 }
