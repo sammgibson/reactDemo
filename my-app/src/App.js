@@ -1,18 +1,33 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Todos from'./components/Todos';
 
 class App extends Component {
+  state ={
+    todos: [
+      {
+        id: 1,
+        title: 'Drive to SF',
+        completed: false
+      },
+      {
+        id: 2,
+        title: 'Dinner with Nico',
+        completed: false
+      },
+      {
+        id: 3,
+        title: 'Eat Ice Cream',
+        completed: false
+      }
+    ]
+  }
+
   render() {
+    console.log()
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <h1>app</h1>
+        <Todos todos={this.state.todos} />
       </div>
     );
   }
